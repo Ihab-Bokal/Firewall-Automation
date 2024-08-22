@@ -1,0 +1,6 @@
+﻿Name,IP,Group
+Ihab,192.168.0.101/32,IP_Group_1
+Yassine,192.168.0.102/32,IP_Group_1
+Amine,192.168.1.103/32,IP_Group_1
+Omar,192.168.1.104/32,IP_Group_2
+Mohammed,192.168.1.105/32,IP_Group_2
