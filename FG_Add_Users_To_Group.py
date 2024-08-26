@@ -7,6 +7,7 @@ class UserGroupConfigurator:
     def __init__(self, csv_file_path, firewall_ip, username, password):
         self.csv_file_path = csv_file_path
         self.fw_manager = FirewallManager(firewall_ip, username, password)
+        self.fw_manager.connect()
         self.ip_details = []
 
     def load_ip_details(self):
@@ -36,9 +37,9 @@ class UserGroupConfigurator:
 if __name__ == "__main__":
     configurator = UserGroupConfigurator(
         "Test files/user_groups.csv",
-        "IP_ADDRESS_HERE",
-        "username",
-        "password"
+        "192.168.1.1",
+        "admin",
+        ""
     )
     configurator.load_ip_details()
     configurator.configure_firewall()

@@ -7,6 +7,7 @@ class FirewallConfigurator:
         self.ip_details = None
         self.csv_file_path = csv_file_path
         self.fw_manager = FirewallManager(firewall_ip, username, password)
+        self.fw_manager.connect()
 
     def load_ip_details(self):
         with open(self.csv_file_path, encoding='utf-8-sig') as csv_users:
