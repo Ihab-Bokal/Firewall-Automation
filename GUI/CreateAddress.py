@@ -5,27 +5,31 @@ from FirewallCommunicationBackend import FG_CLI_send_config
 
 class CreateAddress:
     def __init__(self, root, fw_manager):
+        self.entry_ip = None
+        self.entry_name = None
         self.root = root
         self.fw_manager = fw_manager
         self.frame = tk.Frame(self.root, padx=270, pady=20)
         self.frame.pack(pady=50)
 
     def open_window(self):
-        self.label_ip = tk.Label(self.frame, text="IP Address:")
-        self.label_ip.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+        button_width = 20
+        
+        label_ip = tk.Label(self.frame, text="IP Address:")
+        label_ip.grid(row=0, column=0, padx=10, pady=10, sticky="e")
         self.entry_ip = tk.Entry(self.frame)
         self.entry_ip.grid(row=0, column=1, padx=10, pady=10, sticky="w")
 
-        self.label_name = tk.Label(self.frame, text="Name:")
-        self.label_name.grid(row=1, column=0, padx=10, pady=10, sticky="e")
+        label_name = tk.Label(self.frame, text="Name:")
+        label_name.grid(row=1, column=0, padx=10, pady=10, sticky="e")
         self.entry_name = tk.Entry(self.frame)
         self.entry_name.grid(row=1, column=1, padx=10, pady=10, sticky="w")
 
-        self.submit_button = tk.Button(self.frame, text="Add Address", command=self.add_address)
-        self.submit_button.grid(row=2, columnspan=2, pady=20)
+        submit_button = tk.Button(self.frame, text="Add Address", command=self.add_address, width=button_width)
+        submit_button.grid(row=2, columnspan=2, pady=20)
 
-        self.go_back_button = tk.Button(self.frame, text="Back to homepage", command=self.back)
-        self.go_back_button.grid(row=3, columnspan=2, pady=10)
+        go_back_button = tk.Button(self.frame, text="Back to homepage", command=self.back, width=button_width)
+        go_back_button.grid(row=3, columnspan=2, pady=10)
 
     def back(self):
         self.frame.destroy()
