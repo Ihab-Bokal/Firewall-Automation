@@ -1,6 +1,10 @@
 import tkinter as tk
 from CreateAddress import CreateAddress
 from FirewallCommunicationBackend import FG_CLI_send_config
+import csv
+from tkinter import filedialog, messagebox
+import os
+from CreateService import CreateService
 
 
 def set_active_firewall_policy():
@@ -13,24 +17,30 @@ def select_firewall_policy():
     print("Redirect to Select Firewall Policies Page")
 
 
-def get_addresses_csv():
-    # Function to handle getting a CSV of addresses
-    print("Redirect to Get Addresses CSV Page")
-
-
-def create_service():
-    # Function to handle creating a service
-    print("Redirect to Create Service Page")
-
-
-def get_services_csv():
-    # Function to handle getting a CSV of services
-    print("Redirect to Get Services CSV Page")
-
-
 def create_firewall_policy():
     # Function to handle creating a firewall policy
     print("Redirect to Create Firewall Policy Page")
+
+
+def generate_addresses_csv(addresses):
+    if addresses:
+        try:
+            file_path = filedialog.asksaveasfilename(defaultextension=".csv",
+                                                     filetypes=[("CSV files", "*.csv"),
+                                                                ("All files", "*.*")])
+            if file_path:
+                with open(file_path, mode='w', newline='') as file:
+                    writer = csv.DictWriter(file, fieldnames=["Name", "IP Address"])
+                    writer.writeheader()
+                    writer.writerows(addresses)
+
+                messagebox.showinfo("Success", f"CSV file saved successfully at {file_path}.")
+            else:
+                messagebox.showwarning("Cancelled", "Save operation cancelled.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to save CSV file: {e}")
+    else:
+        messagebox.showwarning("No Data", "No address data available to save.")
 
 
 class HomePage:
@@ -45,28 +55,121 @@ class HomePage:
         btn_create_address = tk.Button(self.frame, text="Create Address", command=self.create_address)
         btn_create_address.grid(row=0, column=0, pady=10)
 
-        btn_get_addresses_csv = tk.Button(self.frame, text="Get Addresses CSV", command=get_addresses_csv)
+        btn_get_addresses_csv = tk.Button(self.frame, text="Get all Addresses", command=self.get_all_addresses)     # self.get_address_csv get_all_addresses
         btn_get_addresses_csv.grid(row=1, column=0, pady=10)
 
-        btn_create_service = tk.Button(self.frame, text="Create Service", command=create_service)
+        btn_create_service = tk.Button(self.frame, text="Create Service", command=self.create_service)
         btn_create_service.grid(row=2, column=0, pady=10)
 
-        btn_get_services_csv = tk.Button(self.frame, text="Get Services CSV", command=get_services_csv)
+        btn_get_services_csv = tk.Button(self.frame, text="Get all Services", command=self.get_all_services)
         btn_get_services_csv.grid(row=3, column=0, pady=10)
 
-        btn_create_firewall_policy = tk.Button(self.frame, text="Create Firewall Policy", command=create_firewall_policy)
+        btn_create_firewall_policy = tk.Button(self.frame, text="Create Firewall Policy",
+                                               command=create_firewall_policy)
         btn_create_firewall_policy.grid(row=4, column=0, pady=10)
 
-        btn_select_firewall_policy = tk.Button(self.frame, text="Select Firewall Policies", command=select_firewall_policy)
+        btn_select_firewall_policy = tk.Button(self.frame, text="Select Firewall Policies",
+                                               command=select_firewall_policy)
         btn_select_firewall_policy.grid(row=5, column=0, pady=10)
 
-        btn_set_active_firewall_policy = tk.Button(self.frame, text="Set Active Firewall Policy", command=set_active_firewall_policy)
+        btn_set_active_firewall_policy = tk.Button(self.frame, text="Set Active Firewall Policy",
+                                                   command=set_active_firewall_policy)
         btn_set_active_firewall_policy.grid(row=6, column=0, pady=10)
 
     def create_address(self):
         self.frame.destroy()
         create_address_page = CreateAddress(self.root, self.fw_manager)
         create_address_page.open_window()
+
+    def get_all_services(self):
+        if self.fw_manager:
+            config_commands = ["show firewall service custom"]
+
+            try:
+                output = self.fw_manager.command(config_commands)
+
+                if output is None:
+                    raise ValueError("No data received from the firewall.")
+
+                file_path = filedialog.asksaveasfilename(defaultextension=".txt",
+                                                         filetypes=[("Text files", "*.txt"),
+                                                                    ("All files", "*.*")])
+                if file_path:
+                    with open(file_path, mode='w') as file:
+                        if isinstance(output, str):
+                            file.write(output)
+                        else:
+                            for line in output:
+                                file.write(line + os.linesep)
+
+                    messagebox.showinfo("Success", f"TXT file saved successfully at {file_path}.")
+                else:
+                    messagebox.showwarning("Cancelled", "Save operation cancelled.")
+
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to retrieve services: {e}")
+        else:
+            messagebox.showerror("Error", "Firewall manager is not connected.")
+
+    def create_service(self):
+        self.frame.destroy()
+        create_service_page = CreateService(self.root, self.fw_manager)
+        create_service_page.open_window()
+
+    def get_all_addresses(self):
+        if self.fw_manager:
+            config_commands = ["show firewall address"]
+
+            try:
+                output = self.fw_manager.command(config_commands)    # MODIFICATION
+
+                if output is None:
+                    raise ValueError("No data received from the firewall.")
+
+                file_path = filedialog.asksaveasfilename(defaultextension=".txt",
+                                                         filetypes=[("Text files", "*.txt"),
+                                                                    ("All files", "*.*")])
+                if file_path:
+                    with open(file_path, mode='w') as file:
+                        for line in output:
+                            file.write(line + os.linesep)
+
+                    messagebox.showinfo("Success", f"TXT file saved successfully at {file_path}.")
+                else:
+                    messagebox.showwarning("Cancelled", "Save operation cancelled.")
+
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to retrieve addresses: {e}")
+        else:
+            messagebox.showerror("Error", "Firewall manager is not connected.")
+
+    # ### CSV version
+    def get_addresses_csv(self):
+        addresses = self.fetch_addresses_from_firewall()
+        generate_addresses_csv(addresses)
+
+    def fetch_addresses_from_firewall(self):
+        if self.fw_manager:
+            config_commands = ["show firewall address"]
+
+            try:
+                output = self.fw_manager.config(config_commands)
+
+                addresses = []
+                for line in output:
+                    if "name=" in line and "subnet=" in line:
+                        name = line.split("name=")[1].split(",")[0]
+                        subnet = line.split("subnet=")[1].split(",")[0]
+                        addresses.append({"Name": name, "IP Address": subnet})
+
+                return addresses
+
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to retrieve addresses: {e}")
+                return None
+        else:
+            messagebox.showerror("Error", "Firewall manager is not connected.")
+            return None
 
 
 if __name__ == "__main__":

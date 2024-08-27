@@ -1,4 +1,5 @@
 from netmiko import Netmiko
+from tkinter import messagebox
 
 
 class FirewallManager:
@@ -21,7 +22,8 @@ class FirewallManager:
     def command(self, command: str):
         if self.connection:
             send_command = self.connection.send_command(command)
-            return send_command
+            print(send_command)
+            return send_command.splitlines()
         else:
             print("Not connected to the firewall. Please connect first.")
 
@@ -30,7 +32,7 @@ class FirewallManager:
             send_config = self.connection.send_config_set(config_commands)
             print(send_config)
         else:
-            print("Not connected to the firewall. Please connect first.")
+            messagebox.showerror("Error", "Not connected to the firewall. Please connect first.")
 
 
 if __name__ == "__main__":

@@ -24,6 +24,15 @@ class CreateAddress:
         self.submit_button = tk.Button(self.frame, text="Add Address", command=self.add_address)
         self.submit_button.grid(row=2, columnspan=2, pady=20)
 
+        self.go_back_button = tk.Button(self.frame, text="Back to homepage", command=self.back)
+        self.go_back_button.grid(row=3, columnspan=2, pady=10)
+
+    def back(self):
+        self.frame.destroy()
+        from homepage import HomePage
+        home = HomePage(self.root, self.fw_manager)
+        home.open_window()
+
     def add_address(self):
         ip_address = self.entry_ip.get()
         name = self.entry_name.get()

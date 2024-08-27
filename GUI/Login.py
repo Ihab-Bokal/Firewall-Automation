@@ -39,10 +39,10 @@ class LoginApp:
         if result:
             messagebox.showinfo("Login", "Login successful!")
             self.frame.destroy()
-            home = HomePage(self.root, None)
-            home.open_window()
-            # fwConn = FirewallConnect(self.root)
-            # fwConn.open_window()
+            # home = HomePage(self.root, None)
+            # home.open_window()
+            fwConn = FirewallConnect(self.root)
+            fwConn.open_window()
         else:
             messagebox.showerror("Login", "Invalid username or password.")
 
