@@ -1,41 +1,39 @@
 import tkinter as tk
 from tkinter import messagebox
 from FirewallCommunicationBackend import FG_CLI_send_config
-from homepage import HomePage
+from .Homepage import HomePage
 
 
 class FirewallConnect:
     def __init__(self, root):
+        self.entry_password = None
+        self.entry_username = None
+        self.entry_fw_ip = None
         self.root = root
         self.fw_manager = None
-
-    def open_window(self):
         self.root.title("Connexion à la FortiGate")
 
         self.frame = tk.Frame(self.root, padx=20, pady=20)
         self.frame.pack(pady=50)
 
-        # Firewall IP address
-        self.label_fw_ip = tk.Label(self.frame, text="Adresse IP du Firewall:")
-        self.label_fw_ip.grid(row=0, column=0, sticky="e")
+    def open_window(self):
+        label_fw_ip = tk.Label(self.frame, text="Adresse IP du Firewall:")
+        label_fw_ip.grid(row=0, column=0, sticky="e")
         self.entry_fw_ip = tk.Entry(self.frame)
         self.entry_fw_ip.grid(row=0, column=1)
 
-        # Firewall username
-        self.label_username = tk.Label(self.frame, text="Username:")
-        self.label_username.grid(row=1, column=0, sticky="e", pady=10)
+        label_username = tk.Label(self.frame, text="Username:")
+        label_username.grid(row=1, column=0, sticky="e", pady=10)
         self.entry_username = tk.Entry(self.frame)
         self.entry_username.grid(row=1, column=1, pady=10)
 
-        # Firewall password
-        self.label_password = tk.Label(self.frame, text="Password:")
-        self.label_password.grid(row=2, column=0, sticky="e", pady=0)
+        label_password = tk.Label(self.frame, text="Password:")
+        label_password.grid(row=2, column=0, sticky="e", pady=0)
         self.entry_password = tk.Entry(self.frame, show="*")
         self.entry_password.grid(row=2, column=1, pady=0)
 
-        # Connect button
-        self.connect_button = tk.Button(self.frame, text="Connexion", command=self.connect)
-        self.connect_button.grid(row=3, columnspan=2, pady=10)
+        connect_button = tk.Button(self.frame, text="Connexion", command=self.connect)
+        connect_button.grid(row=3, columnspan=2, pady=10)
 
     def connect(self):
         fw_ip = self.entry_fw_ip.get()

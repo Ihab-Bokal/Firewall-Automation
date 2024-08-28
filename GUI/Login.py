@@ -1,11 +1,10 @@
 import sqlite3
 import tkinter as tk
 from tkinter import messagebox
-from homepage import HomePage
-from FirewallConnect import FirewallConnect
+from .FirewallConnect import FirewallConnect
 
 
-class LoginApp:
+class Login:
     def __init__(self, root):
         self.root = root
         self.root.title("Login Page")
@@ -39,8 +38,6 @@ class LoginApp:
         if result:
             messagebox.showinfo("Login", "Login successful!")
             self.frame.destroy()
-            # home = HomePage(self.root, None)
-            # home.open_window()
             fwConn = FirewallConnect(self.root)
             fwConn.open_window()
         else:
@@ -51,5 +48,5 @@ class LoginApp:
 
 if __name__ == "__main__":
     root_inst = tk.Tk()
-    app = LoginApp(root_inst)
+    app = Login(root_inst)
     root_inst.mainloop()

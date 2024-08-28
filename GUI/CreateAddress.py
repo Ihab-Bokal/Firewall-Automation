@@ -33,7 +33,7 @@ class CreateAddress:
 
     def back(self):
         self.frame.destroy()
-        from homepage import HomePage
+        from Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
         home.open_window()
 
@@ -59,10 +59,10 @@ class CreateAddress:
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    fw_manager = FG_CLI_send_config.FirewallManager(host="192.168.10.99", username="admin", password="C@s@net")
+    root_inst = tk.Tk()
+    fw_manager_inst = FG_CLI_send_config.FirewallManager(host="192.168.10.99", username="admin", password="C@s@net")
     # fw_manager.connect()
 
-    app = CreateAddress(root, fw_manager)
+    app = CreateAddress(root_inst, fw_manager_inst)
     app.open_window()
-    root.mainloop()
+    root_inst.mainloop()

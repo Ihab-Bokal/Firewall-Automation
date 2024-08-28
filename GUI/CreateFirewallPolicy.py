@@ -2,8 +2,8 @@ import os
 import tkinter as tk
 from tkinter import messagebox, filedialog
 from FirewallCommunicationBackend import FG_CLI_send_config
-from CreateAddress import CreateAddress
-from CreateService import CreateService
+from .CreateAddress import CreateAddress
+from .CreateService import CreateService
 
 
 class CreateFirewallPolicy:
@@ -119,7 +119,7 @@ class CreateFirewallPolicy:
 
     def back(self):
         self.frame.destroy()
-        from homepage import HomePage
+        from Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
         home.open_window()
 

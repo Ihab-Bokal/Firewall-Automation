@@ -1,15 +1,14 @@
 import tkinter as tk
-from CreateAddress import CreateAddress
+from .CreateAddress import CreateAddress
 from FirewallCommunicationBackend import FG_CLI_send_config
 import csv
 from tkinter import filedialog, messagebox
 import os
-from CreateService import CreateService
-from CreateFirewallPolicy import CreateFirewallPolicy
+from .CreateService import CreateService
+from .CreateFirewallPolicy import CreateFirewallPolicy
 
 
 def set_active_firewall_policy():
-    # Function to handle setting a firewall policy as active
     print("Redirect to Set Active Firewall Policy Page")
 
 
