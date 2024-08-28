@@ -27,7 +27,6 @@ class FirewallConfigurator:
             print(sent_config)
 
 
-# Tests
 if __name__ == "__main__":
     configurator = FirewallConfigurator("../Test files/users.csv", "IP_ADDRESS_HERE", "username", "password")
     configurator.load_ip_details()

@@ -2,7 +2,6 @@ import logging
 from netmiko import Netmiko
 from tkinter import messagebox
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -83,6 +82,4 @@ if __name__ == "__main__":
         "end"
     ]
     fw_manager.config(config)
-
-    # Disconnect after the tasks are done
     fw_manager.disconnect()

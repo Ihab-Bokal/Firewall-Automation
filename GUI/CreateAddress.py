@@ -18,7 +18,7 @@ class CreateAddress:
         self.fw_manager = fw_manager
         self.frame = tk.Frame(self.root, padx=270, pady=20)
         self.frame.pack(pady=50)
-        self.logger = logging.getLogger(__name__)  # Create a logger object
+        self.logger = logging.getLogger(__name__)
 
     def open_window(self):
         button_width = 20
@@ -40,7 +40,7 @@ class CreateAddress:
         go_back_button.grid(row=3, columnspan=2, pady=10)
 
     def back(self):
-        self.logger.info("Navigating back to homepage.")  # Log navigation action
+        self.logger.info("Navigating back to homepage.")
         self.frame.destroy()
         from Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
@@ -60,20 +60,22 @@ class CreateAddress:
             ]
             try:
                 self.fw_manager.config(config_commands)
-                self.logger.info(f"Address '{name}' with IP '{ip_address}' added successfully.")  # Log success
+                self.logger.info(f"Address '{name}' with IP '{ip_address}' added successfully.")
                 messagebox.showinfo("Success", "Address added to the firewall.")
+                self.entry_name.delete(0, tk.END)
+                self.entry_ip.delete(0, tk.END)
             except Exception as e:
-                self.logger.error(f"Failed to add address '{name}' with IP '{ip_address}': {e}")  # Log error
+                self.logger.error(f"Failed to add address '{name}' with IP '{ip_address}': {e}")
                 messagebox.showerror("Error", f"Failed to add address: {e}")
         else:
-            self.logger.warning("Attempted to add address with missing IP Address or Name.")  # Log warning
+            self.logger.warning("Attempted to add address with missing IP Address or Name.")
             messagebox.showerror("Error", "Please enter both IP Address and Name.")
 
 
 if __name__ == "__main__":
     root_inst = tk.Tk()
     fw_manager_inst = FG_CLI_send_config.FirewallManager(host="192.168.10.99", username="admin", password="C@s@net")
-    # fw_manager.connect()
+    fw_manager_inst.connect()
 
     app = CreateAddress(root_inst, fw_manager_inst)
     app.open_window()

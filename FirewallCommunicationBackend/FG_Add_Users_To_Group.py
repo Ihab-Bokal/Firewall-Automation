@@ -16,7 +16,6 @@ class UserGroupConfigurator:
 
     def configure_firewall(self):
         for ip in self.ip_details:
-            time.sleep(2)   # Make the output organized
             print(f"{'#'*20} Configuring Object {ip['Name']} {'#'*20}")
             config = [
                 "config firewall address",

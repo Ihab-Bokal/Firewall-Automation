@@ -205,7 +205,6 @@ class HomePage:
                 else:
                     messagebox.showwarning("Cancelled", "Save operation cancelled.")
                     logging.warning("Save operation cancelled by user.")
-
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to retrieve addresses: {e}")
                 logging.error(f"Failed to retrieve addresses: {e}")
