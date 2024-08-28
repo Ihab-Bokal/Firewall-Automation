@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from FirewallCommunicationBackend import FG_CLI_send_config
-from .Homepage import HomePage
+from Homepage import HomePage
 
 
 class FirewallConnect:

@@ -1,6 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox
 from FirewallCommunicationBackend import FG_CLI_send_config
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.FileHandler("../logs/firewall_manager.log"), logging.StreamHandler()]
+)
 
 
 class CreateAddress:
@@ -11,10 +18,11 @@ class CreateAddress:
         self.fw_manager = fw_manager
         self.frame = tk.Frame(self.root, padx=270, pady=20)
         self.frame.pack(pady=50)
+        self.logger = logging.getLogger(__name__)  # Create a logger object
 
     def open_window(self):
         button_width = 20
-        
+
         label_ip = tk.Label(self.frame, text="IP Address:")
         label_ip.grid(row=0, column=0, padx=10, pady=10, sticky="e")
         self.entry_ip = tk.Entry(self.frame)
@@ -32,6 +40,7 @@ class CreateAddress:
         go_back_button.grid(row=3, columnspan=2, pady=10)
 
     def back(self):
+        self.logger.info("Navigating back to homepage.")  # Log navigation action
         self.frame.destroy()
         from Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
@@ -51,10 +60,13 @@ class CreateAddress:
             ]
             try:
                 self.fw_manager.config(config_commands)
+                self.logger.info(f"Address '{name}' with IP '{ip_address}' added successfully.")  # Log success
                 messagebox.showinfo("Success", "Address added to the firewall.")
             except Exception as e:
+                self.logger.error(f"Failed to add address '{name}' with IP '{ip_address}': {e}")  # Log error
                 messagebox.showerror("Error", f"Failed to add address: {e}")
         else:
+            self.logger.warning("Attempted to add address with missing IP Address or Name.")  # Log warning
             messagebox.showerror("Error", "Please enter both IP Address and Name.")
 
 

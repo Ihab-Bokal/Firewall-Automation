@@ -1,6 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox
+import logging
 from FirewallCommunicationBackend import FG_CLI_send_config
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.FileHandler("../logs/firewall_manager.log"), logging.StreamHandler()]
+)
 
 
 class CreateService:
@@ -12,6 +19,7 @@ class CreateService:
         self.fw_manager = fw_manager
         self.frame = tk.Frame(self.root, padx=270, pady=20)
         self.frame.pack(pady=50)
+        logging.debug("CreateService initialized.")
 
     def open_window(self):
         button_width = 20
@@ -37,11 +45,14 @@ class CreateService:
         go_back_button = tk.Button(self.frame, text="Back to homepage", command=self.back, width=button_width)
         go_back_button.grid(row=4, columnspan=2, pady=10)
 
+        logging.debug("CreateService window opened.")
+
     def back(self):
         self.frame.destroy()
         from Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
         home.open_window()
+        logging.debug("Back to homepage.")
 
     def add_service(self):
         service_name = self.entry_name.get()
@@ -58,18 +69,22 @@ class CreateService:
                 "end"
             ]
             try:
+                logging.info(f"Adding service with commands: {config_commands}")
                 self.fw_manager.config(config_commands)
                 messagebox.showinfo("Success", "Service added to the firewall.")
+                logging.info("Service added successfully.")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to add service: {e}")
+                logging.error(f"Failed to add service: {e}")
         else:
             messagebox.showerror("Error", "Please enter Service Name, Protocol, and Port Range.")
+            logging.warning("Add service failed due to missing fields.")
 
 
 if __name__ == "__main__":
     root_inst = tk.Tk()
     fw_manager_inst = FG_CLI_send_config.FirewallManager(host="192.168.10.99", username="admin", password="C@s@net")
-    # fw_manager.connect()
+    fw_manager_inst.connect()
 
     app = CreateService(root_inst, fw_manager_inst)
     app.open_window()

@@ -1,13 +1,21 @@
 import os
 import tkinter as tk
+import logging
 from tkinter import messagebox, filedialog
 from FirewallCommunicationBackend import FG_CLI_send_config
-from .CreateAddress import CreateAddress
-from .CreateService import CreateService
+from CreateAddress import CreateAddress
+from CreateService import CreateService
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[logging.FileHandler("../logs/firewall_manager.log"), logging.StreamHandler()]
+)
 
 
 class CreateFirewallPolicy:
     def __init__(self, root, fw_manager):
+        logging.info("Initializing CreateFirewallPolicy class")
         self.entry_dst = None
         self.entry_src = None
         self.entry_service = None
@@ -15,8 +23,10 @@ class CreateFirewallPolicy:
         self.fw_manager = fw_manager
         self.frame = tk.Frame(self.root, padx=270, pady=20)
         self.frame.pack(pady=50)
+        logging.info("CreateFirewallPolicy UI frame initialized")
 
     def open_window(self):
+        logging.info("Opening CreateFirewallPolicy window")
         button_width = 23
 
         label_src = tk.Label(self.frame, text="Source Address:")
@@ -25,15 +35,20 @@ class CreateFirewallPolicy:
         self.entry_src.grid(row=0, column=1, padx=10, pady=10, sticky="w")
         add_address_src = tk.Button(self.frame, text="+", command=self.open_create_addr)
         add_address_src.grid(row=0, column=2, padx=10, pady=10)
-        get_all_addresses = tk.Button(self.frame, text="download addresses", command=self.download_addresses, width=button_width)
+        logging.info("Source Address entry and button created")
+
+        get_all_addresses = tk.Button(self.frame, text="download addresses", command=self.download_addresses,
+                                      width=button_width)
         get_all_addresses.grid(row=0, column=3, padx=10, pady=10)
+        logging.info("Download Addresses button created")
 
         label_dst = tk.Label(self.frame, text="Destination Address:")
         label_dst.grid(row=1, column=0, padx=10, pady=10, sticky="e")
         self.entry_dst = tk.Entry(self.frame)
         self.entry_dst.grid(row=1, column=1, padx=10, pady=10, sticky="w")
         add_another_address_src = tk.Button(self.frame, text="+", command=self.open_create_addr)
-        add_another_address_src.grid(row=1,  column=2, padx=10, pady=10)
+        add_another_address_src.grid(row=1, column=2, padx=10, pady=10)
+        logging.info("Destination Address entry and button created")
 
         label_service = tk.Label(self.frame, text="Service:")
         label_service.grid(row=2, column=0, padx=10, pady=10, sticky="e")
@@ -41,31 +56,40 @@ class CreateFirewallPolicy:
         self.entry_service.grid(row=2, column=1, padx=10, pady=10, sticky="w")
         add_service_src = tk.Button(self.frame, text="+", command=self.open_create_service)
         add_service_src.grid(row=2, column=2, padx=10, pady=10)
-        get_all_addresses = tk.Button(self.frame, text="download services", command=self.download_services, width=button_width)
-        get_all_addresses.grid(row=2, column=3, padx=10, pady=10)
+        logging.info("Service entry and button created")
+
+        get_all_services = tk.Button(self.frame, text="download services", command=self.download_services,
+                                     width=button_width)
+        get_all_services.grid(row=2, column=3, padx=10, pady=10)
+        logging.info("Download Services button created")
 
         submit_button = tk.Button(self.frame, text="Add Firewall Policy", command=self.add_firewall_policy, width=20)
         submit_button.grid(row=3, columnspan=4, pady=20)
+        logging.info("Add Firewall Policy button created")
 
         go_back_button = tk.Button(self.frame, text="Back to homepage", command=self.back, width=20)
         go_back_button.grid(row=4, columnspan=4, pady=10)
+        logging.info("Back to homepage button created")
 
     def open_create_addr(self):
+        logging.info("Navigating to Create Address page")
         self.frame.destroy()
         create_addr_page = CreateAddress(self.root, self.fw_manager)
         create_addr_page.open_window()
 
     def open_create_service(self):
+        logging.info("Navigating to Create Service page")
         self.frame.destroy()
-        create_addr_page = CreateService(self.root, self.fw_manager)
-        create_addr_page.open_window()
+        create_service_page = CreateService(self.root, self.fw_manager)
+        create_service_page.open_window()
 
     def download_addresses(self):
+        logging.info("Attempting to retrieve and save all addresses")
         if self.fw_manager:
             config_commands = ["show firewall address"]
 
             try:
-                output = self.fw_manager.command(config_commands)    # MODIFICATION
+                output = self.fw_manager.command(config_commands)
 
                 if output is None:
                     raise ValueError("No data received from the firewall.")
@@ -79,15 +103,20 @@ class CreateFirewallPolicy:
                             file.write(line + os.linesep)
 
                     messagebox.showinfo("Success", f"TXT file saved successfully at {file_path}.")
+                    logging.info(f"TXT file saved successfully at {file_path}")
                 else:
                     messagebox.showwarning("Cancelled", "Save operation cancelled.")
+                    logging.warning("Save operation cancelled by user.")
 
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to retrieve addresses: {e}")
+                logging.error(f"Failed to retrieve addresses: {e}")
         else:
             messagebox.showerror("Error", "Firewall manager is not connected.")
+            logging.error("Firewall manager is not connected.")
 
     def download_services(self):
+        logging.info("Attempting to retrieve and save all services")
         if self.fw_manager:
             config_commands = ["show firewall service custom"]
 
@@ -109,21 +138,27 @@ class CreateFirewallPolicy:
                                 file.write(line + os.linesep)
 
                     messagebox.showinfo("Success", f"TXT file saved successfully at {file_path}.")
+                    logging.info(f"TXT file saved successfully at {file_path}")
                 else:
                     messagebox.showwarning("Cancelled", "Save operation cancelled.")
+                    logging.warning("Save operation cancelled by user.")
 
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to retrieve services: {e}")
+                logging.error(f"Failed to retrieve services: {e}")
         else:
             messagebox.showerror("Error", "Firewall manager is not connected.")
+            logging.error("Firewall manager is not connected.")
 
     def back(self):
+        logging.info("Navigating back to homepage")
         self.frame.destroy()
         from Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
         home.open_window()
 
     def add_firewall_policy(self):
+        logging.info("Adding firewall policy")
         src_address = self.entry_src.get()
         dst_address = self.entry_dst.get()
         service = self.entry_service.get()
@@ -144,16 +179,19 @@ class CreateFirewallPolicy:
             try:
                 self.fw_manager.config(config_commands)
                 messagebox.showinfo("Success", "Firewall policy added successfully. Note that schedule is set to always in this app version")
+                logging.info("Firewall policy added successfully")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to add firewall policy: {e}")
+                logging.error(f"Failed to add firewall policy: {e}")
         else:
             messagebox.showerror("Error", "Please enter all required fields.")
+            logging.warning("Attempt to add firewall policy without entering all required fields")
 
 
 if __name__ == "__main__":
     root_inst = tk.Tk()
     fw_manager_inst = FG_CLI_send_config.FirewallManager(host="192.168.10.99", username="admin", password="C@s@net")
-    # fw_manager.connect()
+    fw_manager_inst.connect()
 
     app = CreateFirewallPolicy(root_inst, fw_manager_inst)
     app.open_window()
