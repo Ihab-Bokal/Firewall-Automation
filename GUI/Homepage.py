@@ -3,15 +3,15 @@ import logging
 import csv
 import os
 from tkinter import filedialog, messagebox
-from CreateAddress import CreateAddress
+from .CreateAddress import CreateAddress
 from FirewallCommunicationBackend import FG_CLI_send_config
-from CreateService import CreateService
-from CreateFirewallPolicy import CreateFirewallPolicy
+from .CreateService import CreateService
+from .CreateFirewallPolicy import CreateFirewallPolicy
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.FileHandler("../logs/firewall_manager.log"), logging.StreamHandler()]
+    handlers=[logging.FileHandler("./logs/firewall_manager.log"), logging.StreamHandler()]
 )
 
 

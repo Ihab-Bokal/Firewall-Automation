@@ -2,12 +2,12 @@ import sqlite3
 import tkinter as tk
 import logging
 from tkinter import messagebox
-from FirewallConnect import FirewallConnect
+from .FirewallConnect import FirewallConnect
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.FileHandler("../logs/firewall_manager.log"), logging.StreamHandler()]
+    handlers=[logging.FileHandler("./logs/firewall_manager.log"), logging.StreamHandler()]
 )
 
 

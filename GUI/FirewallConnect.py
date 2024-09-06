@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 from FirewallCommunicationBackend import FG_CLI_send_config
-from Homepage import HomePage
+from .Homepage import HomePage
+import logging
 
 
 class FirewallConnect:
@@ -47,8 +48,15 @@ class FirewallConnect:
             self.frame.destroy()
             home = HomePage(self.root, self.fw_manager)
             home.open_window()
-        except Exception as e:
+        except ConnectionError as e:
             messagebox.showerror("Erreur", f"Erreur de connexion: {e}")
+            self.entry_username.delete(0, tk.END)
+            self.entry_password.delete(0, tk.END)
+            self.entry_fw_ip.delete(0, tk.END)
+            logging.error(f"Connection error: {e}")
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur inattendue: {e}")
+            logging.error(f"Unexpected error: {e}")
 
     def get_fw_manager(self):
         return self.fw_manager

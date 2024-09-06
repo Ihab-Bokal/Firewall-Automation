@@ -6,7 +6,7 @@ from FirewallCommunicationBackend import FG_CLI_send_config
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.FileHandler("../logs/firewall_manager.log"), logging.StreamHandler()]
+    handlers=[logging.FileHandler("./logs/firewall_manager.log"), logging.StreamHandler()]
 )
 
 
@@ -97,7 +97,7 @@ class CreateService:
 
     def back(self):
         self.frame.destroy()
-        from Homepage import HomePage
+        from .Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
         home.open_window()
         logging.debug("Back to homepage.")

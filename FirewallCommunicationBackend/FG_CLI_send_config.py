@@ -6,7 +6,7 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler("../logs/firewall_manager.log"),
+        logging.FileHandler("./logs/firewall_manager.log"),
         logging.StreamHandler()
     ]
 )
@@ -30,7 +30,7 @@ class FirewallManager:
             logging.info("Successfully connected to FortiGate.")
         except Exception as e:
             logging.error(f"Failed to connect to FortiGate: {e}")
-            messagebox.showerror("Error", f"Failed to connect to FortiGate: {e}")
+            raise ConnectionError(f"Failed to connect to FortiGate: {e}")
 
     def command(self, command: str):
         if self.connection:

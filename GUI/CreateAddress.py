@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.FileHandler("../logs/firewall_manager.log"), logging.StreamHandler()]
+    handlers=[logging.FileHandler("./logs/firewall_manager.log"), logging.StreamHandler()]
 )
 
 
@@ -42,7 +42,7 @@ class CreateAddress:
     def back(self):
         self.logger.info("Navigating back to homepage.")
         self.frame.destroy()
-        from Homepage import HomePage
+        from .Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
         home.open_window()
 

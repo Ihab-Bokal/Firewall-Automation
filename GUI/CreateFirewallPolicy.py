@@ -3,13 +3,13 @@ import tkinter as tk
 import logging
 from tkinter import messagebox, filedialog, ttk
 from FirewallCommunicationBackend import FG_CLI_send_config
-from CreateAddress import CreateAddress
-from CreateService import CreateService
+from .CreateAddress import CreateAddress
+from .CreateService import CreateService
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.FileHandler("../logs/firewall_manager.log"), logging.StreamHandler()]
+    handlers=[logging.FileHandler("./logs/firewall_manager.log"), logging.StreamHandler()]
 )
 
 
@@ -190,7 +190,7 @@ class CreateFirewallPolicy:
     def back(self):
         logging.info("Navigating back to homepage")
         self.frame.destroy()
-        from Homepage import HomePage
+        from .Homepage import HomePage
         home = HomePage(self.root, self.fw_manager)
         home.open_window()
 
